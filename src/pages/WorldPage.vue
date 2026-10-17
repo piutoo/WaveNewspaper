@@ -9,9 +9,9 @@
         v-for="a in stories"
         :key="a.slug"
         :to="'/article/' + a.slug"
-        class="card"
-      >
+        class="card">
         <img v-if="a.image" :src="a.image" :alt="a.title" />
+        
         <div>
           <h2>{{ a.title }}</h2>
           <p>{{ a.summary }}</p>
@@ -19,7 +19,6 @@
         </div>
       </router-link>
     </main>
-
     <FooterComponent />
   </div>
 </template>
@@ -33,30 +32,24 @@ export default {
   components: { NavBar, FooterComponent },
   data() {
     return {
-      category: 'World'
-    }
-  },
+      category: 'World' } },
   computed: {
-    // only show articles in this category
     stories() {
       return allArticles().filter(a => a.category === this.category)
     }
-  }
-}
+  }}
 </script>
 
 <style scoped>
 .banner {
   width: 100%;
   height: 240px;
-  object-fit: cover;
-}
+  object-fit: cover;}
 
 h1 {
   text-align: center;
   color: #c30000;
-  font-size: 40px;
-}
+  font-size: 40px;}
 
 .cards {
   max-width: 1050px;
@@ -65,28 +58,24 @@ h1 {
   padding: 0 20px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
+  gap: 20px;}
 
 .card {
   background: #eee;
   color: #222;
   text-decoration: none;
   border-radius: 8px;
-  overflow: hidden;
-}
+  overflow: hidden;}
 
 .card img {
   width: 100%;
   height: 180px;
-  object-fit: cover;
-}
+  object-fit: cover;}
 
 .card div {
-  padding: 18px;
-}
+  padding: 18px;}
 
 .card strong {
-  color: #c30000;
-}
+  color: #c30000;}
+  
 </style>
