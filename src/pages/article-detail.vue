@@ -1,38 +1,33 @@
+
 <template>
   <div>
     <NavBar />
-
     <main class="create">
       <h1>Create Article</h1>
 
-      <p v-if="!user">Please <router-link to="/login">log in</router-link> to publish an article.</p>
-
+      <p v-if="!user">
+        Please <router-link to="/login"> log in </router-link> to publish an article.
+      </p>
+      
       <form v-else @submit.prevent="publish">
-        <label>
-          Title
-          <input v-model.trim="title" required minlength="8" />
-        </label>
+        <label>Title</label>
+        <input v-model="title" required minlength="8" />
 
-        <label>
-          Category
-          <select v-model="category">
-            <option>World</option>
-            <option>Politics</option>
-            <option>Climate</option>
-          </select>
-        </label>
+        <label> Category </label>
+        <select v-model="category">
+          <option> World </option>
+          <option> Politics </option>
+          <option> Climate </option>
+          
+        </select>
 
-        <label>
-          Summary
-          <textarea v-model.trim="summary" required minlength="20"></textarea>
-        </label>
+        <label>Summary</label>
+        <textarea v-model="summary" required minlength="20"></textarea>
 
-        <label>
-          Article content
-          <textarea v-model.trim="body" required minlength="50" rows="9"></textarea>
-        </label>
+        <label>Article Content</label>
+        <textarea v-model="body" required minlength="50" rows="9"></textarea>
 
-        <button>Publish article</button>
+        <button type="submit">Publish Article</button>
       </form>
     </main>
 
@@ -45,7 +40,10 @@ import NavBar from '@/components/navbar.vue'
 import FooterComponent from '@/components/footer.vue'
 
 export default {
-  components: { NavBar, FooterComponent },
+  name: 'CreateArticle',
+  components: {
+    NavBar,
+    FooterComponent },
   data() {
     return {
       user: JSON.parse(localStorage.getItem('wave_user') || 'null'),
@@ -53,71 +51,64 @@ export default {
       category: 'World',
       summary: '',
       body: ''
-    }
-  },
-  methods: {
-    // saves the new article in localStorage, then opens it
-    publish() {
-      const saved = JSON.parse(localStorage.getItem('wave_articles') || '[]')
-      const slug = 'reader-' + Date.now()
+    } },
 
-      saved.unshift({
-        slug,
+  methods: {
+    publish() {
+      // Get saved articles
+      const articles = JSON.parse(localStorage.getItem('wave_articles') || '[]')
+      const slug = 'reader-' + Date.now()
+      // Add new article
+      articles.unshift({
+        slug: slug,
         title: this.title,
         category: this.category,
         summary: this.summary,
-        // a blank line in the textarea starts a new paragraph
-        body: this.body.split(/\n\s*\n/).filter(Boolean),
+        body: this.body.split('\n\n'),
         image: null
       })
-
-      localStorage.setItem('wave_articles', JSON.stringify(saved))
+      // Save article
+      localStorage.setItem('wave_articles', JSON.stringify(articles))
+      // Open article page
       this.$router.push('/article/' + slug)
+      
     }
-  }
-}
+  }}
 </script>
 
 <style scoped>
 .create {
   max-width: 720px;
-  margin: 35px auto 70px;
+  margin: 35px auto;
   padding: 25px;
   background: #f7f7f7;
   border-radius: 8px;
-  min-height: 45vh;
-}
+  min-height: 45vh;}
 
-.create h1 {
-  color: #c30000;
-}
+h1 {
+  color: #c30000;}
 
-.create form {
+form {
   display: grid;
-  gap: 17px;
-}
+  gap: 15px;}
 
-.create label {
-  display: grid;
-  gap: 7px;
-  font-weight: bold;
-}
+label {
+  font-weight: bold;}
 
-.create input,
-.create select,
-.create textarea {
+input,
+select,
+textarea {
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font: inherit;
-}
+  font: inherit;}
 
-.create button {
+button {
   padding: 13px;
-  color: white;
   background: #c30000;
-  border: 0;
+  color: white;
+  border: none;
   border-radius: 5px;
-  cursor: pointer;
-}
+  cursor: pointer;}
 </style>
+
