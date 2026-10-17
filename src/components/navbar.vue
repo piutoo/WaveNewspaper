@@ -18,9 +18,10 @@
   </nav>
 </template>
 
+
 <script>
 export default {
-   name: 'NewsNavBar',
+  name: 'NewsNavBar',
   data() {
     return {
       query: '',
@@ -28,13 +29,17 @@ export default {
       loggedIn: !!localStorage.getItem('wave_user')
     }
   },
-  methods: {
+
+  methods: 
     search() {
-      this.$router.push({ path: '/search', query: { q: this.query.trim() } })
+      this.$router.push({
+        path: '/search',
+        query: { q: this.query.trim() }
+      })
     }
-  }
-}
+  }}
 </script>
+
 
 <style scoped>
 .navbar {
