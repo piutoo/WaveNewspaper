@@ -3,7 +3,7 @@
     <NavBar />
 
     <main class="wrap">
-      <!-- login / register form (shown when nobody is logged in) -->
+     
       <form v-if="!user" class="panel" @submit.prevent="submit">
         <h1>{{ register ? 'Create account' : 'Login' }}</h1>
         <p>Log in to write and publish articles.</p>
@@ -22,7 +22,7 @@
         <small>This is a demo. Accounts are only saved in your browser, so please don't use a real password.</small>
       </form>
 
-      <!-- shown when someone is already logged in -->
+      <!-- already logged in -->
       <div v-else class="panel">
         <h1>Welcome, {{ user.name }}</h1>
         <p>You are logged in.</p>
@@ -39,7 +39,9 @@
 import NavBar from '@/components/navbar.vue'
 import FooterComponent from '@/components/footer.vue'
 
+
 export default {
+  name: 'LoginPage',
   components: { NavBar, FooterComponent },
   data() {
     return {
@@ -52,7 +54,6 @@ export default {
     }
   },
   methods: {
-    // turns the password into a SHA-256 hash so the plain password isn't stored
     async hash(text) {
       const data = new TextEncoder().encode(text)
       const digest = await crypto.subtle.digest('SHA-256', data)
@@ -76,7 +77,6 @@ export default {
         accounts[email] = { name: this.name, hash }
         localStorage.setItem('wave_accounts', JSON.stringify(accounts))
       } else if (!accounts[email] || accounts[email].hash !== hash) {
-        // log in with an existing account
         this.error = 'Incorrect email or password.'
         return
       }
