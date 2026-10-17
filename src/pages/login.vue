@@ -1,32 +1,55 @@
+
 <template>
   <div>
     <NavBar />
 
     <main class="wrap">
-     
       <form v-if="!user" class="panel" @submit.prevent="submit">
-        <h1>{{ register ? 'Create account' : 'Login' }}</h1>
-        <p>Log in to write and publish articles.</p>
+        <h1>
+          {{ register ? 'Create Account' : 'Login' }}</h1>
+        <p> Log in to write and create articles. </p>
 
-        <input v-if="register" v-model.trim="name" placeholder="Your name" required minlength="2" />
-        <input v-model.trim="email" type="email" placeholder="Email" required />
-        <input v-model="password" type="password" placeholder="Password (at least 8 characters)" required minlength="8" />
+        <input  v-if="register" v-model="name"
+          placeholder="Your name"
+          required
+          minlength="2" >
 
-        <p v-if="error" class="error" role="alert">{{ error }}</p>
+        <input v-model="email"
+          type="email"
+          placeholder="Email"
+          required >
 
-        <button>{{ register ? 'Register' : 'Login' }}</button>
-        <button class="switch" type="button" @click="register = !register; error = ''">
-          {{ register ? 'Already registered? Log in' : 'New here? Create account' }}
+        <input v-model="password"
+          type="password"
+          placeholder="Password (at least 8 characters)"
+          required
+          minlength="8" >
+
+        <p v-if="error" class="error">
+          {{ error }} </p>
+
+        <button type="submit">
+          {{ register ? 'Register' : 'Login' }}
         </button>
 
-        <small>This is a demo. Accounts are only saved in your browser, so please don't use a real password.</small>
+        <button
+          type="button"
+          class="switch"
+          @click="register = !register; error = ''" >
+          {{ register ? 'Already have an account? Login' : 'Create an account' }}
+        </button>
+
+        <small>
+          Demo only, ccounts are saved in your browser.
+        </small>
       </form>
 
-      <!-- already logged in -->
       <div v-else class="panel">
         <h1>Welcome, {{ user.name }}</h1>
         <p>You are logged in.</p>
+
         <router-link to="/create">Create an article</router-link>
+
         <button @click="logout">Log out</button>
       </div>
     </main>
@@ -39,10 +62,14 @@
 import NavBar from '@/components/navbar.vue'
 import FooterComponent from '@/components/footer.vue'
 
-
 export default {
   name: 'LoginPage',
-  components: { NavBar, FooterComponent },
+
+  components: {
+    NavBar,
+    FooterComponent
+  },
+
   data() {
     return {
       register: false,
@@ -51,48 +78,54 @@ export default {
       password: '',
       error: '',
       user: JSON.parse(localStorage.getItem('wave_user') || 'null')
-    }
-  },
+    }},
+
   methods: {
     async hash(text) {
       const data = new TextEncoder().encode(text)
-      const digest = await crypto.subtle.digest('SHA-256', data)
-      return Array.from(new Uint8Array(digest))
+      const result = await crypto.subtle.digest('SHA-256', data)
+
+      return Array.from(new Uint8Array(result))
         .map(x => x.toString(16).padStart(2, '0'))
-        .join('')
-    },
+        .join('')  },
 
     async submit() {
       this.error = ''
-      const email = this.email.toLowerCase()
+
+      const email = this.email.trim().toLowerCase()
       const accounts = JSON.parse(localStorage.getItem('wave_accounts') || '{}')
-      const hash = await this.hash(this.password)
+      const password = await this.hash(this.password)
 
       if (this.register) {
-        // make a new account
         if (accounts[email]) {
-          this.error = 'This email is already registered.'
+          this.error = 'Email already registered.'
           return
         }
-        accounts[email] = { name: this.name, hash }
-        localStorage.setItem('wave_accounts', JSON.stringify(accounts))
-      } else if (!accounts[email] || accounts[email].hash !== hash) {
-        this.error = 'Incorrect email or password.'
-        return
-      }
 
-      this.user = { name: accounts[email].name, email }
+        accounts[email] = {
+          name: this.name.trim(),
+          hash: password }
+
+        localStorage.setItem('wave_accounts', JSON.stringify(accounts))
+      } else {
+        if (!accounts[email] || accounts[email].hash !== password) {
+          this.error = 'Incorrect email or password.'
+          return
+        }  }
+
+      this.user = {
+        name: accounts[email].name,
+        email: email }
+
       localStorage.setItem('wave_user', JSON.stringify(this.user))
-      this.$router.push('/home')
-    },
+      this.$router.push('/home') },
 
     logout() {
       localStorage.removeItem('wave_user')
       this.user = null
       this.$router.go(0)
     }
-  }
-}
+  }}
 </script>
 
 <style scoped>
@@ -101,47 +134,40 @@ export default {
   background: url('~@/assets/newspaper.jpg') center/cover;
   display: grid;
   place-items: center;
-  padding: 40px 15px;
-}
+  padding: 40px 15px;}
 
 .panel {
   background: #fffffff0;
   padding: 30px;
   max-width: 400px;
   width: 100%;
-  box-sizing: border-box;
   border-radius: 10px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 13px;
-}
+  gap: 13px;}
 
-.panel input {
+input {
   padding: 12px;
   border: 1px solid #bbb;
-  border-radius: 5px;
-}
+  border-radius: 5px;}
 
-.panel button {
+button {
   background: #c30000;
   color: white;
-  border: 0;
+  border: none;
   padding: 12px;
   border-radius: 5px;
-  cursor: pointer;
-}
+  cursor: pointer;}
 
-.panel .switch {
+.switch {
   background: #eee;
-  color: #a00000;
-}
+  color: #a00000;}
 
 .error {
-  color: #b00000;
-}
+  color: #b00000;}
 
-.panel small {
+small {
   color: #666;
-  line-height: 1.5;
-}
+  line-height: 1.5;}
 </style>
