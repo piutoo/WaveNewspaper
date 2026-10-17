@@ -10,17 +10,15 @@
         class="result"
         v-for="a in matches"
         :key="a.slug"
-        :to="'/article/' + a.slug"
-      >
+        :to="'/article/' + a.slug">
         <h2>{{ a.title }}</h2>
         <p>{{ a.summary }}</p>
         <small>{{ a.category }} →</small>
       </router-link>
 
-      <p v-if="!matches.length">Try a different keyword, such as climate, budget or world.</p>
+      <p v-if="!matches.length"> Try a different keyword, such as climate, budget or world. </p>
     </main>
-
-    <FooterComponent />
+    <FooterComponent/>
   </div>
 </template>
 
@@ -30,23 +28,24 @@ import FooterComponent from '@/components/footer.vue'
 import { allArticles } from '@/data/articles'
 
 export default {
-  components: { NavBar, FooterComponent },
+  name: 'SearchResults',
+  components: {
+    NavBar,
+    FooterComponent
+  },
   computed: {
-    // the word that was searched, taken from the url (?q=...)
+   
     term() {
       return String(this.$route.query.q || '').trim()
     },
-    // articles that have the word in the title, summary, category or body
     matches() {
       const q = this.term.toLowerCase()
       if (!q) return []
 
       return allArticles().filter(a =>
         [a.title, a.summary, a.category, ...a.body].join(' ').toLowerCase().includes(q)
-      )
-    }
-  }
-}
+      )}
+  }}
 </script>
 
 <style scoped>
@@ -54,19 +53,16 @@ export default {
   max-width: 950px;
   margin: 40px auto;
   min-height: 55vh;
-  padding: 0 20px;
-}
+  padding: 0 20px;}
 
 .result {
   display: block;
   text-decoration: none;
   color: #333;
   border-bottom: 1px solid #ddd;
-  padding: 15px 0;
-}
+  padding: 15px 0;}
 
 .result h2,
 .result small {
-  color: #c30000;
-}
+  color: #c30000;}
 </style>
