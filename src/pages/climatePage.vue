@@ -1,21 +1,25 @@
+
 <template>
   <div>
     <NavBar />
-    <img class="banner" src="@/assets/1newspaper.jpg" alt="Newspaper banner" />
-    <h1>{{ category.toUpperCase() }}</h1>
+    <img class="banner" src="@/assets/1newspaper.jpg" alt="Newspaper banner">
+
+    <h1> Climate </h1>
 
     <main class="cards">
-      <router-link
-        v-for="a in stories"
-        :key="a.slug"
-        :to="'/article/' + a.slug"
+      <router-link v-for="article in stories"
+        :key="article.slug"
+        :to="'/article/' + article.slug"
         class="card"
       >
-        <img v-if="a.image" :src="a.image" :alt="a.title" />
+        <img v-if="article.image" :src="article.image" :alt="article.title">
+
         <div>
-          <h2>{{ a.title }}</h2>
-          <p>{{ a.summary }}</p>
-          <strong>Read article →</strong>
+          <h2>
+            {{ article.title }} </h2>
+          <p>
+            {{ article.summary }} </p>
+          <strong> Read article </strong>
         </div>
       </router-link>
     </main>
@@ -30,63 +34,54 @@ import FooterComponent from '@/components/footer.vue'
 import { allArticles } from '@/data/articles'
 
 export default {
-  components: { NavBar, FooterComponent },
-  data() {
-    return {
-      category: 'Climate'
-    }
-  },
+  name: 'ClimatePage',
+  components: {
+    NavBar,
+    FooterComponent },
+
   computed: {
-    // only show articles in this category
     stories() {
-      return allArticles().filter(a => a.category === this.category)
+      return allArticles().filter(article => article.category === 'Climate')
     }
-  }
-}
+  }}
 </script>
 
 <style scoped>
 .banner {
   width: 100%;
   height: 240px;
-  object-fit: cover;
-}
+  object-fit: cover;}
 
 h1 {
   text-align: center;
   color: #c30000;
-  font-size: 40px;
-}
+  font-size: 40px;}
 
 .cards {
   max-width: 1050px;
   min-height: 40vh;
-  margin: 30px auto 60px;
-  padding: 0 20px;
+  margin: 30px auto;
+  padding: 20px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
+  gap: 20px;}
 
 .card {
   background: #eee;
   color: #222;
   text-decoration: none;
   border-radius: 8px;
-  overflow: hidden;
-}
+  overflow: hidden;}
 
 .card img {
   width: 100%;
   height: 180px;
-  object-fit: cover;
-}
+  object-fit: cover;}
 
 .card div {
-  padding: 18px;
-}
+  padding: 18px;}
 
 .card strong {
-  color: #c30000;
-}
+  color: #c30000;}
 </style>
+
