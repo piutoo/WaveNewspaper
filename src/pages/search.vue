@@ -1,24 +1,32 @@
+
 <template>
   <div>
     <NavBar />
 
     <main class="results">
-      <h1>Search results for “{{ term }}”</h1>
-      <p>{{ matches.length }} article(s) found</p>
+      <h1> Search results for "{{ term }}" </h1>
+      <p>
+        {{ matches.length }} articles found</p>
 
-      <router-link
+      <router-link v-for="article in matches"
+        :key="article.slug"
+        :to="'/article/' + article.slug"
         class="result"
-        v-for="a in matches"
-        :key="a.slug"
-        :to="'/article/' + a.slug">
-        <h2>{{ a.title }}</h2>
-        <p>{{ a.summary }}</p>
-        <small>{{ a.category }} →</small>
+      >
+        <h2>
+          {{ article.title }} </h2>
+        <p>
+          {{ article.summary }} </p>
+        <small>
+          {{ article.category }} </small>
       </router-link>
 
-      <p v-if="!matches.length"> Try a different keyword, such as climate, budget or world. </p>
+      <p v-if="matches.length === 0">
+        No articles found. Try searching for something else.
+      </p>
     </main>
-    <FooterComponent/>
+
+    <FooterComponent />
   </div>
 </template>
 
@@ -31,38 +39,43 @@ export default {
   name: 'SearchResults',
   components: {
     NavBar,
-    FooterComponent
-  },
-  computed: {
-   
-    term() {
-      return String(this.$route.query.q || '').trim()
-    },
-    matches() {
-      const q = this.term.toLowerCase()
-      if (!q) return []
+    FooterComponent},
 
-      return allArticles().filter(a =>
-        [a.title, a.summary, a.category, ...a.body].join(' ').toLowerCase().includes(q)
-      )}
-  }}
+  computed: {
+    term() {
+      return this.$route.query.q || '' },
+
+    matches() {
+      const search = this.term.toLowerCase().trim()
+      if (!search) return []
+      return allArticles().filter(article => {
+        const text = [
+          article.title,
+          article.summary,
+          article.category,
+          ...article.body ].join(' ').toLowerCase()
+
+        return text.includes(search)
+      })
+    }}}
 </script>
 
 <style scoped>
 .results {
   max-width: 950px;
   margin: 40px auto;
-  min-height: 55vh;
-  padding: 0 20px;}
+  padding: 20px;
+  min-height: 55vh;}
 
 .result {
   display: block;
-  text-decoration: none;
-  color: #333;
+  padding: 15px 0;
   border-bottom: 1px solid #ddd;
-  padding: 15px 0;}
+  text-decoration: none;
+  color: #333;}
 
 .result h2,
 .result small {
   color: #c30000;}
 </style>
+
