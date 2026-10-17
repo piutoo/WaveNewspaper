@@ -20,15 +20,15 @@
 
 <script>
 export default {
+   name: 'NewsNavBar',
   data() {
     return {
       query: '',
-      // true if someone is logged in (their details are saved in localStorage)
+      // true if someone is logged in
       loggedIn: !!localStorage.getItem('wave_user')
     }
   },
   methods: {
-    // go to the search page and put the typed word in the url
     search() {
       this.$router.push({ path: '/search', query: { q: this.query.trim() } })
     }
