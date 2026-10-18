@@ -26,3 +26,6 @@ This project helped me improve my understanding of
 Vue components, routing and organising a website
 across multiple pages. I also gained more experience
 turning my own Figma designs into code.
+
+## Website
+https://piutoo.github.io/WaveNewspaper/#/home
